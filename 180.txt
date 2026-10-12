@@ -1,0 +1,220 @@
+
+SQL*Plus: Release 11.2.0.1.0 Production on Mon Oct 12 11:19:10 2026
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+Enter user-name: exam180@db2021
+Enter password:
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+
+Enter user-name: exam180@db2021
+Enter password:
+
+Connected to:
+Oracle Database 11g Release 11.2.0.1.0 - Production
+
+SQL> drop table customer;
+
+Table dropped.
+
+SQL> create table customer(
+  2  cust_id number(4),
+  3  cust_name varchar2(4),
+  4  city varchar2(20),
+  5  phone number(10),
+  6  Balance number(10)
+  7  );
+
+Table created.
+
+SQL> insert into customer values(101,'ravi','kanchipuram',6305200065);
+insert into customer values(101,'ravi','kanchipuram',6305200065)
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> insert into customer values(101,'ravi','kanchipuram',6305200065,10000);
+
+1 row created.
+
+SQL> insert into customer values(102,'alex','vellore',7096677718,60000);
+
+1 row created.
+
+SQL> insert into customer values(103,'jai','chennai',6347891240,70000);
+
+1 row created.
+
+SQL> update customer set balance=75000
+  2  where cust_id=102;
+
+1 row updated.
+
+SQL> select 8 from customer where cust_id=102;
+
+         8
+----------
+         8
+
+SQL> select * from customer where cust_id=102;
+
+   CUST_ID CUST CITY                      PHONE    BALANCE
+---------- ---- -------------------- ---------- ----------
+       102 alex vellore              7096677718      75000
+
+SQL> delete from customer where city='vellore';
+
+1 row deleted.
+
+SQL> select *from customer;
+
+   CUST_ID CUST CITY                      PHONE    BALANCE
+---------- ---- -------------------- ---------- ----------
+       101 ravi kanchipuram          6305200065      10000
+       103 jai  chennai              6347891240      70000
+
+SQL> alter table customer add email varchar2(50);
+
+Table altered.
+
+SQL> desc customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUST_ID                                            NUMBER(4)
+ CUST_NAME                                          VARCHAR2(4)
+ CITY                                               VARCHAR2(20)
+ PHONE                                              NUMBER(10)
+ BALANCE                                            NUMBER(10)
+ EMAIL                                              VARCHAR2(50)
+
+SQL> select * from customer
+  2  where balance >60000;
+
+   CUST_ID CUST CITY                      PHONE    BALANCE
+---------- ---- -------------------- ---------- ----------
+EMAIL
+--------------------------------------------------
+       103 jai  chennai              6347891240      70000
+
+
+
+SQL> creat table branch(
+SP2-0734: unknown command beginning "creat tabl..." - rest of line ignored.
+SQL> create table branch(
+  2  branch_id number primary key,
+  3  branch_name varchar2(20)
+  4  );
+
+Table created.
+
+SQL> create table account(
+  2   ACC_NO INT PRIMARY KEY,
+  3      HOLDER_NAME VARCHAR(100) NOT NULL,
+  4      EMAIL VARCHAR(100) UNIQUE,
+  5      MIN_BALANCE DECIMAL(10, 2) CHECK (MIN_BALANCE >= 1000),
+  6      BRANCH_ID INT,
+  7      FOREIGN KEY (BRANCH_ID) REFERENCES BRANCH(BRANCH_ID)
+  8  );
+
+Table created.
+
+SQL> insert into branch values(1,'kanchipurammain');
+
+1 row created.
+
+SQL> insert into branch values(2,'kanchipuramsub');
+
+1 row created.
+
+SQL> INSERT INTO ACCOUNT VALUES (101, 'Alice Smith', 'alice@example.com', 1500.00, 1);
+
+1 row created.
+
+SQL> INSERT INTO ACCOUNT VALUES (102, 'jai', 'jai@gmail.com', 1500.00, 2);
+
+1 row created.
+
+SQL> select * from branch;
+
+ BRANCH_ID BRANCH_NAME
+---------- --------------------
+         1 kanchipurammain
+         2 kanchipuramsub
+
+SQL> select * from account;
+
+    ACC_NO
+----------
+HOLDER_NAME
+--------------------------------------------------------------------------------
+EMAIL
+--------------------------------------------------------------------------------
+MIN_BALANCE  BRANCH_ID
+----------- ----------
+       101
+Alice Smith
+alice@example.com
+       1500          1
+
+
+    ACC_NO
+----------
+HOLDER_NAME
+--------------------------------------------------------------------------------
+EMAIL
+--------------------------------------------------------------------------------
+MIN_BALANCE  BRANCH_ID
+----------- ----------
+       102
+jai
+jai@gmail.com
+       1500          2
+
+
+SQL> insert into account valurs (103,null,'chari@gmail.com,1500.00,1);
+ERROR:
+ORA-01756: quoted string not properly terminated
+
+
+SQL> insert into account valurs (103,null,'chari@gmail.com',1500.00,1);
+insert into account valurs (103,null,'chari@gmail.com',1500.00,1)
+                            *
+ERROR at line 1:
+ORA-00928: missing SELECT keyword
+
+
+SQL> INSERT INTO ACCOUNT VALUES (103, NULL, 'charlie@example.com', 1200.00, 1);
+INSERT INTO ACCOUNT VALUES (103, NULL, 'charlie@example.com', 1200.00, 1)
+                                 *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("EXAM180"."ACCOUNT"."HOLDER_NAME")
+
+
+SQL> INSERT INTO ACCOUNT VALUES (104, 'davi', 'davi@example.com', 1100.00, 1);
+
+1 row created.
+
+SQL> INSERT INTO ACCOUNT VALUES (104, 'davi', 'davi@examplecom', 1100.00, 1);
+INSERT INTO ACCOUNT VALUES (104, 'davi', 'davi@examplecom', 1100.00, 1)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (EXAM180.SYS_C0035892) violated
+
+
+SQL> INSERT INTO ACCOUNT VALUES (103, 'davi', 'davi@example.com', 2000.00, 999);
+INSERT INTO ACCOUNT VALUES (103, 'davi', 'davi@example.com', 2000.00, 999)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (EXAM180.SYS_C0035893) violated
+
+SQL> INSERT INTO ACCOUNT VALUES (103, 'davi', 'davi@example.com', 500.00, 999);
+INSERT INTO ACCOUNT VALUES (103, 'davi', 'davi@example.com', 500.00, 999)
+*
+ERROR at line 1:
+ORA-02290: check constraint (EXAM180.SYS_C0035891) violated
+
+
+SQL>
